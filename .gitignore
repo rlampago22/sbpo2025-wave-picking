@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# Dados oficiais (baixados localmente)
+vendor/
+
+# Logs e temporários de solver
+*.log
+*.lp
+*.mps
+tmp/
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
