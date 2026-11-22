@@ -1,0 +1,81 @@
+"""Testes com o exemplo do PDF oficial (5 pedidos, 5 itens, 5 corredores, ótimo = 5)."""
+
+from pathlib import Path
+
+import pytest
+
+from wavepick import Solution, evaluate, read_instance, read_solution, write_solution
+from wavepick.exact.dinkelbach import dinkelbach
+from wavepick.heuristics.greedy import greedy
+from wavepick.preprocess import preprocess
+
+EXAMPLE = """5 5 5
+2 0 3 2 1
+2 1 1 3 1
+2 2 1 4 2
+4 0 1 2 2 3 1 4 1
+1 1 1
+4 0 2 1 1 2 1 4 1
+4 0 2 1 1 2 2 4 1
+3 1 2 3 1 4 2
+4 0 2 1 1 3 1 4 1
+4 1 1 2 2 3 1 4 2
+5 12
+"""
+
+ROOT = Path(__file__).resolve().parents[1]
+CHECKER = ROOT / "vendor" / "challenge-sbpo-2025" / "checker.py"
+
+
+@pytest.fixture
+def inst(tmp_path):
+    p = tmp_path / "exemplo.txt"
+    p.write_text(EXAMPLE)
+    return read_instance(p)
+
+
+def test_leitura(inst):
+    assert (inst.n_orders, inst.n_items, inst.n_aisles) == (5, 5, 5)
+    assert (inst.lb, inst.ub) == (5, 12)
+    assert inst.order_size.tolist() == [4, 2, 3, 5, 1]
+
+
+def test_solucoes_do_pdf(inst):
+    assert evaluate(inst, Solution([0, 4], [0, 1])).objective == 2.5
+    assert evaluate(inst, Solution([0, 2, 3], [1, 3, 4])).objective == 4.0
+    ev = evaluate(inst, Solution([0, 1, 2, 4], [1, 3]))
+    assert ev.feasible and ev.objective == 5.0
+
+
+def test_inviaveis(inst):
+    assert not evaluate(inst, Solution([0, 1, 2, 3, 4], [0, 1, 2, 3, 4])).feasible  # passa do UB
+    assert not evaluate(inst, Solution([4], [0])).feasible  # abaixo do LB
+    assert not evaluate(inst, Solution([0, 1, 2, 4], [1])).feasible  # falta estoque
+    assert not evaluate(inst, Solution([0], [])).feasible  # sem corredor
+
+
+def test_heuristica_viavel(inst):
+    sol = greedy(inst, preprocess(inst))
+    assert sol is not None and evaluate(inst, sol).feasible
+
+
+def test_dinkelbach_otimo(inst):
+    res = dinkelbach(inst, preprocess(inst), time_limit=10, log=lambda *_: None)
+    assert res.proven_optimal
+    assert evaluate(inst, res.solution).objective == 5.0
+
+
+def test_escrita_e_checker_oficial(inst, tmp_path):
+    sol = Solution([0, 1, 2, 4], [1, 3])
+    out = tmp_path / "sol.txt"
+    write_solution(sol, out)
+    assert read_solution(out) == sol
+    if not CHECKER.exists():
+        pytest.skip("checker oficial não baixado em vendor/")
+    import subprocess
+    import sys
+
+    inst_path = tmp_path / "exemplo.txt"
+    r = subprocess.run([sys.executable, str(CHECKER), str(inst_path), str(out)], capture_output=True, text=True)
+    assert "Is solution feasible: True" in r.stdout
+    assert "Objective function value: 5.0" in r.stdout
