@@ -24,65 +24,76 @@ Resultados atuais: [`results/comparacao.md`](../results/comparacao.md).
 - **Os pontos fracos** são A/05 (80%), A/11 (81%), A/08 (87%) e A/10 (89,5%).
 - **X/14** (a maior: 68 mil pedidos): 99,3% da referência, mas **toda a qualidade veio da heurística**. O CP-SAT não achou solução melhor em 120 s.
 
-**Conclusão:** nas instâncias grandes (B e X), a **heurística é o que garante a nota** (Pessoa 2), e o solver precisa de ajuda (Pessoas 1 e 3). B e X ainda não foram rodados por inteiro.
+**Conclusão:** nas instâncias grandes (B e X), a **heurística é o que garante a nota** (Gustavo), e o solver precisa de ajuda (Vinicius e Kelvin).
 
 ## Divisão de tarefas
 
-Se o grupo tiver 3 pessoas, a Pessoa 4 é dividida entre todos.
+Cada tarefa tem uma **issue no GitHub** com o mesmo checklist. É lá que se marca o progresso e se tiram dúvidas. A divisão é uma sugestão: quem quiser trocar, combina com o grupo e avisa o Marcus.
 
-### Pessoa 1 — Experimentos e solver Gurobi · responsável: ________
+| Integrante | Frente | Arquivos principais |
+|---|---|---|
+| **Marcus Querol** | Coordenação, experimentos e integração | `scripts/`, `results/`, `solutions/` |
+| **Gustavo Almeida** | Heurística e busca local | `src/wavepick/heuristics/` |
+| **Kelvin Camargo** | Modelo exato (CP-SAT) | `src/wavepick/exact/dinkelbach.py` |
+| **Vinicius Gonçalves** | Solver Gurobi e comparação de solvers | `src/wavepick/exact/dinkelbach_gurobi.py` (novo) |
+| **Juliano Brum** | Apresentação (5 min) | slides e `docs/apresentacao.md` (novo) |
 
-- [ ] Rodar **B** e **X** completos (`--time 120` ou mais) e commitar as soluções.
-- [ ] Pedir a licença acadêmica do Gurobi (gratuita, com o e-mail da universidade) e instalar o `gurobipy`.
-- [ ] Criar `src/wavepick/exact/dinkelbach_gurobi.py` com o **mesmo** modelo, mas no Gurobi. Usar o `dinkelbach.py` como molde.
-- [ ] Comparar CP-SAT × Gurobi em 5 instâncias (2 de A, 2 de B, 1 de X) com o mesmo tempo, e anotar a tabela em `docs/experimentos.md`.
-- [ ] Rodar as instâncias mais longe da referência com mais tempo (ex.: `--time 600`).
+### Marcus Querol — Coordenação, experimentos e integração
 
-**Pronto quando:** existe a tabela comparando os dois solvers e o pipeline usa o melhor deles.
+- [ ] Confirmar com o professor:
+  - o tempo limite por instância;
+  - quais datasets são avaliados (A, B, X?);
+  - se podemos usar as soluções publicadas pelo desafio. Por enquanto **não usamos**, só comparamos.
+- [ ] Revisar e aceitar os PRs. Depois de cada PR aceito, rodar de novo as instâncias afetadas com `scripts/run_all.py`.
+- [ ] Rodadas longas (`--time 600`) nas instâncias mais distantes da referência.
+- [ ] Manter `results/comparacao.md` atualizado (`scripts/compare.py --official`) e passar os números ao Juliano.
+- [ ] Entrega final: código + `solutions/` + slides.
 
-### Pessoa 2 — Heurística / busca local · responsável: ________
+**Pronto quando:** todas as instâncias avaliadas têm solução válida no checker oficial e a entrega foi feita.
 
-Arquivo: `src/wavepick/heuristics/local_search.py`.
+### Gustavo Almeida — Heurística e busca local
+
+Arquivo: `src/wavepick/heuristics/local_search.py`. É a frente que mais pesa na nota das instâncias grandes.
 
 - [ ] **Troca de corredor:** tira um corredor, coloca outro e re-preenche os pedidos. Aceita se a razão melhorar.
 - [ ] **Troca de pedidos:** tira 1 pedido e tenta colocar outros que somem mais unidades.
-- [ ] Uma meta-heurística simples sobre esses movimentos: ILS (perturba + busca local) ou Simulated Annealing.
+- [ ] Uma meta-heurística sobre esses movimentos: ILS (perturba + busca local) ou Simulated Annealing.
 - [ ] Medir o ganho só da heurística: `uv run python scripts/run_all.py --no-exact --time 30 --datasets a --tag heur-v2`. Isso deixa um registro em `results/runs.csv`.
 
-**Pronto quando:** a heurística sozinha melhora a média do dataset A em relação à versão atual (ver `heuristica` no `runs.csv`).
+**Pronto quando:** a heurística sozinha melhora a média do dataset A em relação à versão atual (coluna `heuristica` do `runs.csv`).
 
-### Pessoa 3 — Modelo exato · responsável: ________
+### Kelvin Camargo — Modelo exato (CP-SAT)
 
-Arquivo: `src/wavepick/exact/`.
+Arquivo: `src/wavepick/exact/dinkelbach.py`.
 
 - [ ] **Abordagem alternativa "k fixo":** para cada número de corredores `k`, maximizar `N` com `Σ y_a = k` e guardar o melhor `N/k`. Comparar com o Dinkelbach.
 - [ ] **Fortalecer o modelo:** testar a restrição `x_o ≤ Σ_{a ∈ A_i} y_a` (o pedido só entra se algum corredor com o item `i` for aberto) e ver se acelera.
-- [ ] Ajustar o tempo por iteração do Dinkelbach (`iter_time_limit`) e os parâmetros do CP-SAT.
-- [ ] Investigar as instâncias em que o solver não fecha. O `--solver-log` mostra o log.
+- [ ] **Instâncias grandes:** o CP-SAT não acha nada em 120 s com 68 mil pedidos. Testar um **modelo restrito**, só com os corredores e pedidos "próximos" da solução heurística (vizinhança), em vez do modelo inteiro.
+- [ ] Ajustar `iter_time_limit` e os parâmetros do CP-SAT. O `--solver-log` mostra o log.
 
 **Pronto quando:** existe uma variante que melhora pelo menos 3 instâncias com o mesmo tempo, e ela está integrada ao `pipeline.py`.
 
-### Pessoa 4 — Apresentação (5 min) · responsável: ________
+### Vinicius Gonçalves — Solver Gurobi
+
+- [ ] Pedir a licença acadêmica do Gurobi (gratuita, com o e-mail da universidade) e instalar o `gurobipy` (`uv add gurobipy`).
+- [ ] Criar `src/wavepick/exact/dinkelbach_gurobi.py` com o **mesmo** modelo, mas no Gurobi. Usar o `dinkelbach.py` como molde.
+- [ ] Adicionar uma opção `--solver cpsat|gurobi` no `pipeline.py` e no `run_all.py`.
+- [ ] Comparar CP-SAT × Gurobi em 5 instâncias (2 de A, 2 de B, 1 de X) com o mesmo tempo, e anotar a tabela em `docs/experimentos.md`.
+
+**Pronto quando:** existe a tabela comparando os dois solvers e o pipeline consegue usar o melhor deles.
+
+### Juliano Brum — Apresentação (5 min)
 
 - [ ] **Slides de 0:00 a 2:00 — o problema.** Usar o exemplo do PDF com animação: mostrar a wave {0,1,2,4} nos corredores {1,3} e o empate com {1,2} no corredor 4. Mostrar o trade-off "mais corredores = mais estoque, mas denominador maior".
 - [ ] **Slides de 2:00 a 5:00 — abordagem e resultados.** Diagrama do pipeline, o Dinkelbach em 1 slide, e o gráfico "% da referência por instância" feito a partir de `results/comparacao.csv`.
-- [ ] Roteiro de fala cronometrado.
-- [ ] Lista de perguntas prováveis da banca com respostas, por exemplo:
+- [ ] Roteiro de fala cronometrado. Combinar com o grupo quem apresenta cada parte.
+- [ ] Lista de perguntas prováveis da banca, com respostas, em `docs/apresentacao.md`. Por exemplo:
   - por que Dinkelbach converge;
   - o que é o corte `K ≤ UB/λ`;
   - por que não usar só heurística;
   - qual a complexidade do problema.
 
 **Pronto quando:** o ensaio cronometrado cabe em 5 minutos.
-
-### Coordenação · responsável: ________
-
-- [ ] Confirmar com o professor:
-  - o tempo limite por instância;
-  - quais datasets são avaliados (A, B, X?);
-  - se podemos usar as soluções publicadas pelo desafio. Por enquanto **não usamos**, só comparamos.
-- [ ] Revisar e aceitar os PRs, e rodar `scripts/compare.py --official` antes da entrega.
-- [ ] Entrega final: código + `solutions/` + slides.
 
 ## Como trabalhar no repositório
 
