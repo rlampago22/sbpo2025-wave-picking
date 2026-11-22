@@ -18,13 +18,18 @@ Já existe uma versão **completa e funcionando** do início ao fim:
 
 Resultados atuais: [`results/comparacao.md`](../results/comparacao.md).
 
-**Primeira rodada (30 s por instância, notebook com 4 núcleos):**
+**Primeira rodada (notebook com 4 núcleos; 30 s por instância em A, 120 s em B e X): 50/50 soluções válidas no checker oficial, 97,6% da referência em média.**
 
-- **Dataset A:** 20/20 válidas no checker oficial, **96,7%** da referência em média, 13 instâncias no valor de referência.
-- **Os pontos fracos** são A/05 (80%), A/11 (81%), A/08 (87%) e A/10 (89,5%).
-- **X/14** (a maior: 68 mil pedidos): 99,3% da referência, mas **toda a qualidade veio da heurística**. O CP-SAT não achou solução melhor em 120 s.
+| Dataset | Média % da referência | Mais fracas |
+|---|---:|---|
+| A | 96,7% | A/05 (80%), A/11 (81%), A/08 (87%), A/10 (89,5%) |
+| B | 98,1% | B/06 (91%), B/02 (92%), B/03 (94,5%) |
+| X | 98,4% | X/06 (95%), X/10 (95,5%), X/08 (96%) |
 
-**Conclusão:** nas instâncias grandes (B e X), a **heurística é o que garante a nota** (Gustavo), e o solver precisa de ajuda (Vinicius e Kelvin).
+- Em B e X, o Dinkelbach melhorou a solução da heurística em 24 de 30 instâncias, mas **não provou otimalidade em nenhuma**: o tempo acaba antes.
+- As instâncias mais fracas são o alvo de todo mundo. Qualquer melhoria deve ser medida nelas primeiro.
+
+**Conclusão:** heurística melhor (Gustavo) dá um ponto de partida mais alto ao solver, e solver mais rápido (Kelvin e Vinicius) sobe mais degraus no mesmo tempo. As duas frentes se somam.
 
 ## Divisão de tarefas
 

@@ -63,8 +63,7 @@ docs/                    documentação e plano
 
 - [x] Entendimento do problema e arquitetura
 - [x] Pipeline completo (heurística + Dinkelbach/CP-SAT + verificador)
-- [x] Primeira rodada no dataset A: 96,7% da referência em média ([resultados](results/comparacao.md))
-- [ ] Rodadas completas em B e X
+- [x] Primeira rodada em A, B e X: 50/50 válidas, **97,6%** da referência em média ([resultados](results/comparacao.md))
 - [ ] Busca local mais forte (Pessoa 2)
 - [ ] Variantes do modelo exato e Gurobi (Pessoas 1 e 3)
 - [ ] Apresentação (Pessoa 4)
