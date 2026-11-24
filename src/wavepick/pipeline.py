@@ -14,12 +14,40 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
-from .exact.dinkelbach import dinkelbach
+from .exact.dinkelbach import dinkelbach, kfixed, lns
 from .heuristics.greedy import greedy
 from .heuristics.local_search import improve
 from .instance import Instance, read_instance
 from .preprocess import preprocess
 from .solution import Evaluation, Solution, evaluate, write_solution
+
+
+HYBRID_LNS_SHARE = 0.5
+
+# Variantes do método exato (ver docs/04-modelo-exato.md)
+VARIANTS = ("base", "strong", "kfixed", "lns", "lns-strong", "hybrid")
+
+
+def run_exact(variant, inst, red, sol, time_limit, workers, log, solver_log):
+    """Despacha para a variante pedida do método exato."""
+    kw = dict(initial=sol, time_limit=time_limit, workers=workers, log=log, solver_log=solver_log)
+    if variant == "base":
+        return dinkelbach(inst, red, **kw)
+    if variant == "strong":
+        return dinkelbach(inst, red, strengthen=True, **kw)
+    if variant == "kfixed":
+        return kfixed(inst, red, **kw)
+    if variant == "lns":
+        return lns(inst, red, **kw)
+    if variant == "hybrid":
+        # LNS primeiro (sobe rápido), depois Dinkelbach no modelo completo a partir da solução do LNS.
+        t0 = time.perf_counter()
+        r1 = lns(inst, red, **{**kw, "time_limit": time_limit * HYBRID_LNS_SHARE})
+        kw2 = {**kw, "initial": r1.solution or sol, "time_limit": time_limit - (time.perf_counter() - t0)}
+        return dinkelbach(inst, red, **kw2)
+    if variant == "lns-strong":
+        return lns(inst, red, strengthen=True, **kw)
+    raise ValueError(f"variante desconhecida: {variant} (use uma de {VARIANTS})")
 
 
 @dataclass
@@ -40,6 +68,7 @@ def solve(
     use_exact: bool = True,
     verbose: bool = True,
     solver_log: bool = False,
+    variant: str = "hybrid",
 ) -> RunResult:
     log = print if verbose else (lambda *_: None)
     t0 = time.perf_counter()
@@ -57,10 +86,10 @@ def solve(
     method, proven = "heuristica", False
     if use_exact:
         remaining = time_limit - (time.perf_counter() - t0)
-        res = dinkelbach(inst, red, initial=sol, time_limit=remaining, workers=workers, log=log, solver_log=solver_log)
+        res = run_exact(variant, inst, red, sol, remaining, workers, log, solver_log)
         if res.solution is not None and (sol is None or res.solution.objective(inst) >= sol.objective(inst)):
             if sol is None or res.solution.objective(inst) > sol.objective(inst):
-                method = "dinkelbach"
+                method = variant
             sol = res.solution
         proven = res.proven_optimal
 
@@ -82,6 +111,7 @@ def main() -> None:
     p.add_argument("output", type=Path)
     p.add_argument("--time", type=float, default=60.0, help="limite de tempo total em segundos")
     p.add_argument("--workers", type=int, default=None, help="threads do CP-SAT (padrão: todas)")
+    p.add_argument("--variant", choices=VARIANTS, default="hybrid", help="variante do método exato")
     p.add_argument("--no-exact", action="store_true", help="só heurística")
     p.add_argument("--solver-log", action="store_true", help="mostra o log do CP-SAT")
     args = p.parse_args()
@@ -89,7 +119,8 @@ def main() -> None:
         sys.stdout.reconfigure(encoding="utf-8")
 
     inst = read_instance(args.instance)
-    res = solve(inst, args.time, workers=args.workers, use_exact=not args.no_exact, solver_log=args.solver_log)
+    res = solve(inst, args.time, workers=args.workers, use_exact=not args.no_exact, solver_log=args.solver_log,
+                variant=args.variant)
     if res.solution is None:
         raise SystemExit("Nenhuma solução viável encontrada.")
     write_solution(res.solution, args.output)

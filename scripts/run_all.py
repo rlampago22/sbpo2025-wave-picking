@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from wavepick import evaluate, read_instance, read_solution, write_solution  # noqa: E402
-from wavepick.pipeline import solve  # noqa: E402
+from wavepick.pipeline import VARIANTS, solve  # noqa: E402
 
 DATA = ROOT / "vendor" / "challenge-sbpo-2025" / "datasets"
 SOLUTIONS = ROOT / "solutions"
@@ -38,6 +38,8 @@ def main() -> None:
     p.add_argument("--time", type=float, default=60.0, help="segundos por instância")
     p.add_argument("--only", nargs="*", default=None, help="filtra por nome (ex.: instance_0001)")
     p.add_argument("--workers", type=int, default=None)
+    p.add_argument("--variant", choices=VARIANTS, default="hybrid", help="variante do método exato")
+    p.add_argument("--no-save", action="store_true", help="só registra em runs.csv, não toca em solutions/")
     p.add_argument("--no-exact", action="store_true")
     p.add_argument("--overwrite", action="store_true", help="salva mesmo se for pior que a atual")
     p.add_argument("--tag", default="", help="rótulo livre para identificar a execução no runs.csv")
@@ -61,13 +63,15 @@ def main() -> None:
                 if args.only and not any(f in path.name for f in args.only):
                     continue
                 inst = read_instance(path)
-                res = solve(inst, args.time, workers=args.workers, use_exact=not args.no_exact)
+                res = solve(inst, args.time, workers=args.workers, use_exact=not args.no_exact, variant=args.variant)
                 out = SOLUTIONS / ds / path.name
                 saved = False
                 if res.solution is not None:
                     old = evaluate(inst, read_solution(out)) if out.exists() else None
                     new_obj = res.evaluation.objective
-                    if args.overwrite or old is None or not old.feasible or new_obj > old.objective + 1e-9:
+                    if args.no_save:
+                        pass
+                    elif args.overwrite or old is None or not old.feasible or new_obj > old.objective + 1e-9:
                         write_solution(res.solution, out)
                         saved = True
                     else:

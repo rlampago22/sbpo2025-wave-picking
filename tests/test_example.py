@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from wavepick import Solution, evaluate, read_instance, read_solution, write_solution
-from wavepick.exact.dinkelbach import dinkelbach
+from wavepick.exact.dinkelbach import dinkelbach, kfixed, lns, neighborhood
 from wavepick.heuristics.greedy import greedy
 from wavepick.preprocess import preprocess
 
@@ -63,6 +63,34 @@ def test_dinkelbach_otimo(inst):
     res = dinkelbach(inst, preprocess(inst), time_limit=10, log=lambda *_: None)
     assert res.proven_optimal
     assert evaluate(inst, res.solution).objective == 5.0
+
+
+def test_dinkelbach_modelo_fortalecido_mesmo_otimo(inst):
+    res = dinkelbach(inst, preprocess(inst), time_limit=10, log=lambda *_: None, strengthen=True)
+    assert res.proven_optimal
+    assert evaluate(inst, res.solution).objective == 5.0
+
+
+def test_k_fixo_otimo(inst):
+    res = kfixed(inst, preprocess(inst), time_limit=20, log=lambda *_: None)
+    assert res.proven_optimal
+    assert evaluate(inst, res.solution).objective == 5.0
+
+
+def test_k_fixo_com_modelo_fortalecido(inst):
+    res = kfixed(inst, preprocess(inst), time_limit=20, log=lambda *_: None, strengthen=True)
+    assert evaluate(inst, res.solution).objective == 5.0
+
+
+def test_vizinhanca_contem_solucao_e_lns_nao_piora(inst):
+    red = preprocess(inst)
+    start = Solution([0, 2, 3], [1, 3, 4])  # razão 4.0
+    sub = neighborhood(inst, red, start, max_aisles=2, max_orders=1)
+    assert set(start.aisles) <= set(sub.aisles.tolist())
+    assert set(start.orders) <= set(sub.orders.tolist())
+    res = lns(inst, red, initial=start, time_limit=10, log=lambda *_: None)
+    ev = evaluate(inst, res.solution)
+    assert ev.feasible and ev.objective >= 4.0
 
 
 def test_escrita_e_checker_oficial(inst, tmp_path):
