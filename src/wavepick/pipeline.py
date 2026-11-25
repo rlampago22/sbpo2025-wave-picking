@@ -1,6 +1,6 @@
 """Pipeline completo para UMA instância:
 
-    pré-processamento → heurística gulosa → melhoria local → Dinkelbach (CP-SAT) → verificação → arquivo
+    pré-processamento → heurística gulosa → ILS (busca local) → Dinkelbach (CP-SAT) → verificação → arquivo
 
 Uso:
     uv run python -m wavepick.pipeline <instancia.txt> <saida.txt> [--time 60]
@@ -16,13 +16,15 @@ from pathlib import Path
 
 from .exact.dinkelbach import dinkelbach, kfixed, lns
 from .heuristics.greedy import greedy
-from .heuristics.local_search import improve
+from .heuristics.local_search import ils, improve
 from .instance import Instance, read_instance
 from .preprocess import preprocess
 from .solution import Evaluation, Solution, evaluate, write_solution
 
 
 HYBRID_LNS_SHARE = 0.5
+# Fatia do tempo total para a ILS quando o método exato roda depois dela
+ILS_SHARE = 0.10
 
 # Variantes do método exato (ver docs/04-modelo-exato.md)
 VARIANTS = ("base", "strong", "kfixed", "lns", "lns-strong", "hybrid")
@@ -80,6 +82,9 @@ def solve(
     sol = greedy(inst, red, time_limit=time_limit * heuristic_share)
     if sol is not None:
         sol = improve(inst, red, sol)
+        # Sem o método exato, a ILS usa todo o tempo que sobra
+        ils_time = time_limit * ILS_SHARE if use_exact else time_limit - (time.perf_counter() - t0)
+        sol = ils(inst, red, sol, time_limit=ils_time)
     h_obj = sol.objective(inst) if sol else 0.0
     log(f"  heurística: {h_obj:.4f} ({time.perf_counter() - t0:.1f}s)")
 
