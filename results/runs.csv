@@ -166,3 +166,4 @@ data,maquina,tag,dataset,instancia,tempo_limite,segundos,metodo,heuristica,objet
 2026-11-25T14:59:44,DESKTOP-87A12AB,gurobi-300s,x,instance_0009.txt,300.0,304.3,hybrid-gurobi,815.875000,819.875000,False,True
 2026-11-25T15:04:45,DESKTOP-87A12AB,gurobi-300s,x,instance_0014.txt,300.0,300.5,hybrid-gurobi,1622.666667,1630.000000,False,True
 2026-11-25T15:08:25,DESKTOP-87A12AB,gurobi-300s,x,instance_0015.txt,300.0,219.7,hybrid-gurobi,239.285714,263.909091,True,True
+2026-11-25T15:28:35,DESKTOP-87A12AB,gurobi-900s,a,instance_0011.txt,900.0,900.2,hybrid-gurobi,12.559006,16.850000,False,True

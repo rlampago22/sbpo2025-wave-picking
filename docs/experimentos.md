@@ -147,7 +147,29 @@ uv run python scripts/run_all.py --datasets x --only instance_0001 instance_0004
 
 As 13 melhoraram, e 10 chegaram ao valor de referência. Em 4 delas, o Gurobi também **provou** que a solução é ótima.
 
-A média geral foi de **99,1% para 99,8%** da referência: A 99,7%, B 99,8% e X 99,9%. As 50 soluções foram aprovadas pelo `checker.py` oficial. A única instância ainda abaixo de 99,5% é a **A/0011** (94,0%): ela tem 375 corredores e a solução ótima usa muitos deles, então o corte `K ≤ ⌊UB/λ⌋` quase não ajuda.
+A média geral foi de **99,1% para 99,8%** da referência: A 99,7%, B 99,8% e X 99,9%. As 50 soluções foram aprovadas pelo `checker.py` oficial. Depois dessa rodada, só a **A/0011** (94,0%) ficou abaixo de 99,5%.
+
+### 5. A/0011 com 900 s
+
+```bash
+uv run python scripts/run_all.py --datasets a --only instance_0011 --time 900 --solver gurobi --tag gurobi-900s
+```
+
+O Gurobi chegou a **16,85 = referência (100%)**. A trajetória do Dinkelbach mostra por que essa instância era difícil:
+
+| Etapa | Razão | Unidades / corredores |
+|---|---:|---:|
+| Gulosa + ILS | 12,56 | |
+| LNS | 13,58 | |
+| Iteração 1 | 15,06 | 1747 / 116 |
+| Iteração 2 | 15,80 | 1090 / 69 |
+| Iteração 3 | 15,83 | 1029 / 65 |
+| Iteração 4 | 16,44 | 444 / 27 |
+| Iteração 5 | **16,85** | **337 / 20** |
+
+A melhor wave é **pequena**: 337 unidades, quase no mínimo LB = 330, com só 20 corredores. A heurística e as rodadas curtas ficavam presas em waves grandes, com 65 ou mais corredores. Com mais tempo, o Gurobi saiu desse ótimo local.
+
+**Situação final:** média de **99,9%** da referência (A 99,95%, B 99,83%, X 99,91%). 33 das 50 instâncias atingiram o valor de referência e todas ficaram acima de 99,5%. As 50 soluções foram aprovadas pelo `checker.py` oficial.
 
 ### Conclusão e escolha do solver
 
