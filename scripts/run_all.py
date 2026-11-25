@@ -7,6 +7,7 @@ results/runs.csv para acompanharmos a evolução.
 Exemplos:
     uv run python scripts/run_all.py --datasets a --time 60
     uv run python scripts/run_all.py --datasets b x --time 300 --only instance_0011
+    uv run python scripts/run_all.py --datasets a --time 60 --solver gurobi --tag gurobi-v1
 """
 
 from __future__ import annotations
@@ -23,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from wavepick import evaluate, read_instance, read_solution, write_solution  # noqa: E402
-from wavepick.pipeline import solve  # noqa: E402
+from wavepick.pipeline import SOLVERS, solve  # noqa: E402
 
 DATA = ROOT / "vendor" / "challenge-sbpo-2025" / "datasets"
 SOLUTIONS = ROOT / "solutions"
@@ -39,6 +40,7 @@ def main() -> None:
     p.add_argument("--only", nargs="*", default=None, help="filtra por nome (ex.: instance_0001)")
     p.add_argument("--workers", type=int, default=None)
     p.add_argument("--no-exact", action="store_true")
+    p.add_argument("--solver", choices=SOLVERS, default="auto", help="solver do Dinkelbach")
     p.add_argument("--overwrite", action="store_true", help="salva mesmo se for pior que a atual")
     p.add_argument("--tag", default="", help="rótulo livre para identificar a execução no runs.csv")
     args = p.parse_args()
@@ -61,7 +63,7 @@ def main() -> None:
                 if args.only and not any(f in path.name for f in args.only):
                     continue
                 inst = read_instance(path)
-                res = solve(inst, args.time, workers=args.workers, use_exact=not args.no_exact)
+                res = solve(inst, args.time, workers=args.workers, use_exact=not args.no_exact, solver=args.solver)
                 out = SOLUTIONS / ds / path.name
                 saved = False
                 if res.solution is not None:

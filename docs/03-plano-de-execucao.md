@@ -80,10 +80,10 @@ Arquivo: `src/wavepick/exact/dinkelbach.py`.
 
 ### Vinicius Gonçalves — Solver Gurobi
 
-- [ ] Pedir a licença acadêmica do Gurobi (gratuita, com o e-mail da universidade) e instalar o `gurobipy` (`uv add gurobipy`).
-- [ ] Criar `src/wavepick/exact/dinkelbach_gurobi.py` com o **mesmo** modelo, mas no Gurobi. Usar o `dinkelbach.py` como molde.
-- [ ] Adicionar uma opção `--solver cpsat|gurobi` no `pipeline.py` e no `run_all.py`.
-- [ ] Comparar CP-SAT × Gurobi em 5 instâncias (2 de A, 2 de B, 1 de X) com o mesmo tempo, e anotar a tabela em `docs/experimentos.md`.
+- [ ] Pedir a licença acadêmica do Gurobi (gratuita, com o e-mail da universidade). *(`gurobipy` já instalado; falta a licença)*
+- [x] Criar `src/wavepick/exact/dinkelbach_gurobi.py` com o **mesmo** modelo, mas no Gurobi. Usar o `dinkelbach.py` como molde.
+- [x] Adicionar uma opção `--solver cpsat|gurobi` no `pipeline.py` e no `run_all.py` (+ `auto` e fallback para CP-SAT).
+- [ ] Comparar CP-SAT × Gurobi em 5 instâncias (2 de A, 2 de B, 1 de X) com o mesmo tempo, e anotar a tabela em `docs/experimentos.md`. *(script `scripts/compare_solvers.py` pronto; rodada com licença restrita feita, falta a rodada com a licença acadêmica)*
 
 **Pronto quando:** existe a tabela comparando os dois solvers e o pipeline consegue usar o melhor deles.
 
