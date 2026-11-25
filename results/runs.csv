@@ -143,3 +143,13 @@ data,maquina,tag,dataset,instancia,tempo_limite,segundos,metodo,heuristica,objet
 2026-11-24T21:27:43,Gustavo,heur-v2,a,instance_0018.txt,30.0,30.0,heuristica,117.200000,117.200000,False,False
 2026-11-24T21:28:13,Gustavo,heur-v2,a,instance_0019.txt,30.0,30.0,heuristica,202.000000,202.000000,False,False
 2026-11-24T21:28:43,Gustavo,heur-v2,a,instance_0020.txt,30.0,30.0,heuristica,5.000000,5.000000,False,False
+2026-11-25T11:49:22,DESKTOP-87A12AB,dev-300s,a,instance_0002.txt,300.0,0.0,heuristica,2.000000,2.000000,True,False
+2026-11-25T11:52:01,DESKTOP-87A12AB,dev-300s,a,instance_0003.txt,300.0,159.0,heuristica,12.000000,12.000000,True,False
+2026-11-25T11:57:01,DESKTOP-87A12AB,dev-300s,a,instance_0005.txt,300.0,300.2,hybrid,157.111111,177.875000,False,True
+2026-11-25T12:02:01,DESKTOP-87A12AB,dev-300s,a,instance_0010.txt,300.0,300.2,hybrid,15.289474,15.854545,False,True
+2026-11-25T12:07:01,DESKTOP-87A12AB,dev-300s,a,instance_0011.txt,300.0,300.2,hybrid,12.620253,14.783784,False,True
+2026-11-25T12:12:02,DESKTOP-87A12AB,dev-300s,b,instance_0002.txt,300.0,300.4,hybrid,179.909091,180.636364,False,True
+2026-11-25T12:17:02,DESKTOP-87A12AB,dev-300s,b,instance_0003.txt,300.0,300.2,hybrid,146.500000,149.600000,False,True
+2026-11-25T12:22:03,DESKTOP-87A12AB,dev-300s,b,instance_0005.txt,300.0,300.7,hybrid,363.000000,366.666667,False,False
+2026-11-25T12:27:04,DESKTOP-87A12AB,dev-300s,b,instance_0010.txt,300.0,300.7,hybrid,442.000000,443.333333,False,False
+2026-11-25T12:32:10,DESKTOP-87A12AB,dev-300s,b,instance_0011.txt,300.0,305.6,hybrid,893.100000,894.400000,False,True

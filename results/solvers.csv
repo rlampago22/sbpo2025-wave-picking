@@ -21,3 +21,13 @@ data,maquina,tag,tempo_limite,threads,instancia,solver,inicial,objetivo,referenc
 2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,b/instance_0006,gurobi,71.673913,,84.027778,,,,,sem licença p/ este tamanho
 2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,x/instance_0006,cpsat,170.133333,191.500000,191.857143,False,5,96.5,120.1,
 2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,x/instance_0006,gurobi,170.133333,,191.857143,,,,,sem licença p/ este tamanho
+2026-11-25T12:52:36,DESKTOP-87A12AB,licenca-academica-wls,120.0,4,a/instance_0005,cpsat,141.913043,152.227273,177.875000,False,4,120.7,120.7,
+2026-11-25T12:52:36,DESKTOP-87A12AB,licenca-academica-wls,120.0,4,a/instance_0005,gurobi,141.913043,172.444444,177.875000,False,5,120.0,120.1,
+2026-11-25T12:52:36,DESKTOP-87A12AB,licenca-academica-wls,120.0,4,a/instance_0011,cpsat,12.405063,14.666667,16.850000,False,5,72.5,120.1,
+2026-11-25T12:52:36,DESKTOP-87A12AB,licenca-academica-wls,120.0,4,a/instance_0011,gurobi,12.405063,15.656716,16.850000,False,5,73.3,120.1,
+2026-11-25T12:52:36,DESKTOP-87A12AB,licenca-academica-wls,120.0,4,b/instance_0002,cpsat,129.521739,180.636364,180.636364,False,5,120.2,120.2,
+2026-11-25T12:52:36,DESKTOP-87A12AB,licenca-academica-wls,120.0,4,b/instance_0002,gurobi,129.521739,180.636364,180.636364,False,5,72.2,120.1,
+2026-11-25T12:52:36,DESKTOP-87A12AB,licenca-academica-wls,120.0,4,b/instance_0006,cpsat,71.673913,81.452381,84.027778,False,5,120.4,120.4,
+2026-11-25T12:52:36,DESKTOP-87A12AB,licenca-academica-wls,120.0,4,b/instance_0006,gurobi,71.673913,82.400000,84.027778,False,4,120.0,120.1,
+2026-11-25T12:52:36,DESKTOP-87A12AB,licenca-academica-wls,120.0,4,x/instance_0006,cpsat,170.133333,173.600000,191.857143,False,4,49.1,120.3,
+2026-11-25T12:52:36,DESKTOP-87A12AB,licenca-academica-wls,120.0,4,x/instance_0006,gurobi,170.133333,191.500000,191.857143,False,5,72.3,120.1,

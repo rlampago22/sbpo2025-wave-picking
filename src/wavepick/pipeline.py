@@ -41,7 +41,7 @@ VARIANTS = ("base", "strong", "kfixed", "lns", "lns-strong", "hybrid")
 # Solver do Dinkelbach no modelo completo (variantes "base" e 2ª fase do "hybrid").
 # As demais variantes só existem no CP-SAT. Ver a comparação CP-SAT × Gurobi em docs/experimentos.md.
 SOLVERS = ("cpsat", "gurobi", "auto")
-DEFAULT_SOLVER = "cpsat"  # usado com --solver auto
+DEFAULT_SOLVER = "gurobi"  # venceu 5/5 em docs/experimentos.md; sem licença completa, cai para o CP-SAT
 
 
 def run_exact(variant, inst, red, sol, time_limit, workers, log, solver_log, solver="auto"):

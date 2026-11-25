@@ -43,6 +43,21 @@ Não foi possível emitir a licença acadêmica completa: o Gurobi exige que o p
 
 Quando a licença acadêmica estiver instalada (`~/gurobi.lic`), basta rodar de novo o comando da seção 2 para completar a tabela.
 
+**Como obter a licença (para quem usa o `gurobipy` do pip):**
+
+1. Criar uma conta "Academic" no site do Gurobi com o e-mail da universidade.
+2. **Conectado à rede da Unipampa** (ou a uma VPN da universidade com *full tunnel*), entrar em *User Portal → Licenses → Request* e clicar em **GENERATE NOW** no bloco **WLS Academic**.
+3. Baixar o arquivo `gurobi.lic` e salvá-lo na pasta do usuário (`C:\Users\<usuario>\gurobi.lic` ou `~/gurobi.lic`).
+
+Detalhes:
+
+- A WLS só precisa da rede da universidade **na hora de gerar**. Depois funciona em qualquer lugar com internet.
+- Vale 90 dias e é renovável.
+- É **pessoal**: só quem gerou pode usar.
+- Não precisa do `grbgetkey`, que não vem no `gurobipy` do pip.
+
+Fontes: [academic license](https://support.gurobi.com/hc/en-us/articles/360040541251-How-do-I-obtain-a-free-academic-license), [remote student](https://support.gurobi.com/hc/en-us/articles/43876824710673-As-a-remote-student-how-do-I-request-a-Free-Academic-License).
+
 ### 1. Instâncias que cabem na licença restrita
 
 Aqui a heurística já encontra o ótimo nessas instâncias, então ela foi **desligada** (`--no-start`). Assim se mede só a força de cada solver: os dois partem de λ = 0.
@@ -84,9 +99,28 @@ A coluna do Gurobi fica vazia até a licença acadêmica ser instalada: com a li
 
 Observação: com 8 threads e 120 s, o CP-SAT ficou **bem acima da 1ª rodada** (notebook de 4 núcleos) nessas 5 instâncias: A/0005 passou de 80% para 98% da referência, A/0011 de 81% para 93% e B/0002 de 92% para 100%, com o **ótimo provado**. O `compare_solvers.py` não salva soluções. Para levar esses ganhos ao `solutions/`, é preciso rodar o `run_all.py` nessas instâncias com o mesmo tempo.
 
+### 3. Com a licença acadêmica completa (WLS)
+
+A licença acadêmica foi gerada na rede da Unipampa (Marcus). Rodamos o mesmo comando da seção 2:
+
+```bash
+python scripts/compare_solvers.py --time 120 --tag licenca-academica-wls
+```
+
+Condições: Dinkelbach com 120 s por solver, **4 threads** (notebook do Marcus), mesma solução inicial (heurística de 15 s).
+
+| Instância | Referência | Heurística | CP-SAT | % ref. | Gurobi | % ref. | Vencedor |
+|---|---:|---:|---:|---:|---:|---:|---|
+| A/0005 | 177,88 | 141,91 | 152,23 | 85,6% | **172,44** | **96,9%** | Gurobi |
+| A/0011 | 16,85 | 12,41 | 14,67 | 87,0% | **15,66** | **92,9%** | Gurobi |
+| B/0002 | 180,64 | 129,52 | 180,64 | 100,0% | 180,64 | 100,0% | Gurobi (achou em 72 s × 120 s) |
+| B/0006 | 84,03 | 71,67 | 81,45 | 96,9% | **82,40** | **98,1%** | Gurobi |
+| X/0006 | 191,86 | 170,13 | 173,60 | 90,5% | **191,50** | **99,8%** | Gurobi |
+
+**O Gurobi venceu as 5.** A vantagem é maior com 4 threads do que nos resultados de 8 threads: o CP-SAT depende mais de paralelismo (busca em portfólio), enquanto o Gurobi se apoia na relaxação linear. Nenhum dos dois provou otimalidade em 120 s. Dados brutos em [`results/solvers.csv`](../results/solvers.csv) e [`results/comparacao_solvers.md`](../results/comparacao_solvers.md).
+
 ### Conclusão e escolha do solver
 
-- **Com licença completa**, o Gurobi é o candidato mais forte. Nas 6 instâncias em que os dois rodaram, ele chegou ao mesmo ótimo e **provou** a otimalidade mais rápido em todas as não triviais. Isso pesa no Dinkelbach: o ponto fraco do CP-SAT na 1ª rodada foi justamente a prova (a última iteração).
-- **Sem licença completa** (a situação atual do grupo), o Gurobi não roda em 42 das 50 instâncias. Por isso o padrão do pipeline continua **`--solver auto` = CP-SAT** (`DEFAULT_SOLVER` em [`pipeline.py`](../src/wavepick/pipeline.py)).
-- Quem tiver a licença acadêmica pode usar `--solver gurobi` já. Se o modelo não couber na licença, o pipeline volta sozinho para o CP-SAT, então a opção nunca piora o resultado por falta de licença.
-- **Próximo passo:** com a licença instalada, rodar `python scripts/compare_solvers.py --time 120`. Se o Gurobi vencer a maioria das 5 instâncias, trocar `DEFAULT_SOLVER` para `"gurobi"`.
+- **`DEFAULT_SOLVER = "gurobi"`** ([`pipeline.py`](../src/wavepick/pipeline.py)): `--solver auto` agora usa o Gurobi.
+- **Quem não tem licença completa não é afetado.** O pipeline detecta que o modelo não cabe na licença restrita e volta sozinho para o CP-SAT.
+- **As rodadas finais devem ser feitas na máquina com a licença** (notebook do Marcus). A licença WLS é pessoal e precisa de internet durante a execução.
