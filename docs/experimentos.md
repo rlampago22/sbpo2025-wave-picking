@@ -119,6 +119,36 @@ Condições: Dinkelbach com 120 s por solver, **4 threads** (notebook do Marcus)
 
 **O Gurobi venceu as 5.** A vantagem é maior com 4 threads do que nos resultados de 8 threads: o CP-SAT depende mais de paralelismo (busca em portfólio), enquanto o Gurobi se apoia na relaxação linear. Nenhum dos dois provou otimalidade em 120 s. Dados brutos em [`results/solvers.csv`](../results/solvers.csv) e [`results/comparacao_solvers.md`](../results/comparacao_solvers.md).
 
+### 4. Rodada longa com Gurobi nas 13 instâncias mais fracas
+
+Pegamos as 13 instâncias abaixo de 99,5% da referência e rodamos o pipeline completo com o Gurobi, 300 s por instância e 4 threads (cerca de 33 min no total):
+
+```bash
+uv run python scripts/run_all.py --datasets a --only instance_0006 instance_0007 instance_0010 instance_0011 --time 300 --solver gurobi --tag gurobi-300s
+uv run python scripts/run_all.py --datasets b --only instance_0006 instance_0015 --time 300 --solver gurobi --tag gurobi-300s
+uv run python scripts/run_all.py --datasets x --only instance_0001 instance_0004 instance_0007 instance_0008 instance_0009 instance_0014 instance_0015 --time 300 --solver gurobi --tag gurobi-300s
+```
+
+| Instância | Referência | Antes | Depois (Gurobi, 300 s) | % ref. | Ótimo provado? |
+|---|---:|---:|---:|---:|---|
+| A/0006 | 691,00 | 99,0% | 691,00 | **100,0%** | sim |
+| A/0007 | 392,25 | 99,0% | 392,25 | **100,0%** | sim |
+| A/0010 | 17,11 | 92,7% | 17,05 | **99,6%** | não |
+| A/0011 | 16,85 | 87,7% | 15,83 | **94,0%** | não |
+| B/0006 | 84,03 | 99,0% | 83,97 | **99,9%** | não |
+| B/0015 | 166,14 | 97,6% | 166,14 | **100,0%** | não |
+| X/0001 | 70,85 | 98,9% | 70,85 | **100,0%** | não |
+| X/0004 | 202,75 | 97,3% | 202,75 | **100,0%** | sim |
+| X/0007 | 115,15 | 97,9% | 115,15 | **100,0%** | não |
+| X/0008 | 438,22 | 95,9% | 438,22 | **100,0%** | não |
+| X/0009 | 819,88 | 99,1% | 819,88 | **100,0%** | não |
+| X/0014 | 1633,67 | 99,3% | 1630,00 | **99,8%** | não |
+| X/0015 | 263,91 | 98,1% | 263,91 | **100,0%** | sim |
+
+As 13 melhoraram, e 10 chegaram ao valor de referência. Em 4 delas, o Gurobi também **provou** que a solução é ótima.
+
+A média geral foi de **99,1% para 99,8%** da referência: A 99,7%, B 99,8% e X 99,9%. As 50 soluções foram aprovadas pelo `checker.py` oficial. A única instância ainda abaixo de 99,5% é a **A/0011** (94,0%): ela tem 375 corredores e a solução ótima usa muitos deles, então o corte `K ≤ ⌊UB/λ⌋` quase não ajuda.
+
 ### Conclusão e escolha do solver
 
 - **`DEFAULT_SOLVER = "gurobi"`** ([`pipeline.py`](../src/wavepick/pipeline.py)): `--solver auto` agora usa o Gurobi.

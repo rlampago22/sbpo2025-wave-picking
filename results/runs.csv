@@ -153,3 +153,16 @@ data,maquina,tag,dataset,instancia,tempo_limite,segundos,metodo,heuristica,objet
 2026-11-25T12:22:03,DESKTOP-87A12AB,dev-300s,b,instance_0005.txt,300.0,300.7,hybrid,363.000000,366.666667,False,False
 2026-11-25T12:27:04,DESKTOP-87A12AB,dev-300s,b,instance_0010.txt,300.0,300.7,hybrid,442.000000,443.333333,False,False
 2026-11-25T12:32:10,DESKTOP-87A12AB,dev-300s,b,instance_0011.txt,300.0,305.6,hybrid,893.100000,894.400000,False,True
+2026-11-25T14:11:52,DESKTOP-87A12AB,gurobi-300s,a,instance_0006.txt,300.0,167.3,hybrid-gurobi,683.000000,691.000000,True,True
+2026-11-25T14:15:05,DESKTOP-87A12AB,gurobi-300s,a,instance_0007.txt,300.0,192.5,hybrid-gurobi,390.250000,392.250000,True,True
+2026-11-25T14:20:05,DESKTOP-87A12AB,gurobi-300s,a,instance_0010.txt,300.0,300.2,hybrid-gurobi,15.289474,17.049020,False,True
+2026-11-25T14:25:05,DESKTOP-87A12AB,gurobi-300s,a,instance_0011.txt,300.0,300.1,hybrid-gurobi,12.620253,15.830769,False,True
+2026-11-25T14:30:10,DESKTOP-87A12AB,gurobi-300s,b,instance_0006.txt,300.0,300.1,hybrid-gurobi,78.440000,83.972973,False,True
+2026-11-25T14:35:10,DESKTOP-87A12AB,gurobi-300s,b,instance_0015.txt,300.0,300.1,hybrid-gurobi,162.733333,166.142857,False,True
+2026-11-25T14:40:14,DESKTOP-87A12AB,gurobi-300s,x,instance_0001.txt,300.0,300.2,hybrid-gurobi,69.441176,70.848485,False,True
+2026-11-25T14:44:39,DESKTOP-87A12AB,gurobi-300s,x,instance_0004.txt,300.0,264.5,hybrid-gurobi,201.250000,202.750000,True,True
+2026-11-25T14:49:39,DESKTOP-87A12AB,gurobi-300s,x,instance_0007.txt,300.0,300.2,hybrid-gurobi,114.846154,115.153846,False,True
+2026-11-25T14:54:39,DESKTOP-87A12AB,gurobi-300s,x,instance_0008.txt,300.0,300.3,hybrid-gurobi,437.666667,438.222222,False,True
+2026-11-25T14:59:44,DESKTOP-87A12AB,gurobi-300s,x,instance_0009.txt,300.0,304.3,hybrid-gurobi,815.875000,819.875000,False,True
+2026-11-25T15:04:45,DESKTOP-87A12AB,gurobi-300s,x,instance_0014.txt,300.0,300.5,hybrid-gurobi,1622.666667,1630.000000,False,True
+2026-11-25T15:08:25,DESKTOP-87A12AB,gurobi-300s,x,instance_0015.txt,300.0,219.7,hybrid-gurobi,239.285714,263.909091,True,True
