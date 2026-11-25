@@ -107,3 +107,63 @@ def test_escrita_e_checker_oficial(inst, tmp_path):
     r = subprocess.run([sys.executable, str(CHECKER), str(inst_path), str(out)], capture_output=True, text=True)
     assert "Is solution feasible: True" in r.stdout
     assert "Objective function value: 5.0" in r.stdout
+
+
+# ---------------------------------------------------------------- Gurobi
+from wavepick.exact.dinkelbach_gurobi import GurobiUnavailable, dinkelbach_gurobi  # noqa: E402
+from wavepick.pipeline import solve  # noqa: E402
+
+
+def _gurobi_or_skip(fn):
+    try:
+        return fn()
+    except GurobiUnavailable as e:
+        pytest.skip(f"Gurobi indisponível: {e}")
+
+
+def test_dinkelbach_gurobi_otimo(inst):
+    res = _gurobi_or_skip(lambda: dinkelbach_gurobi(inst, preprocess(inst), time_limit=10, log=lambda *_: None))
+    assert res.proven_optimal
+    assert evaluate(inst, res.solution).objective == 5.0
+
+
+def test_dinkelbach_gurobi_com_solucao_inicial(inst):
+    start = greedy(inst, preprocess(inst))
+    res = _gurobi_or_skip(lambda: dinkelbach_gurobi(inst, preprocess(inst), initial=start, time_limit=10,
+                                                    log=lambda *_: None))
+    assert res.proven_optimal and evaluate(inst, res.solution).objective == 5.0
+
+
+@pytest.mark.parametrize("solver", ["cpsat", "gurobi", "auto"])
+def test_pipeline_com_solver(inst, solver):
+    # Com --solver gurobi sem licença o pipeline cai para o CP-SAT: tem que funcionar sempre.
+    res = solve(inst, time_limit=10, verbose=False, solver=solver)
+    assert res.evaluation.feasible and res.evaluation.objective == 5.0
+    assert res.solver in ("cpsat", "gurobi")
+    if solver == "cpsat":
+        assert res.solver == "cpsat"
+
+
+def test_pipeline_solver_invalido(inst):
+    with pytest.raises(ValueError):
+        solve(inst, time_limit=5, verbose=False, solver="cplex")
+
+
+def test_pipeline_gurobi_sem_licenca_cai_para_cpsat(inst, monkeypatch):
+    import wavepick.pipeline as pl
+
+    def sem_licenca(*_, **__):
+        raise GurobiUnavailable("simulado")
+
+    monkeypatch.setattr(pl, "dinkelbach_gurobi", sem_licenca)
+    res = solve(inst, time_limit=10, verbose=False, solver="gurobi")
+    assert res.solver == "cpsat" and res.evaluation.objective == 5.0
+
+
+@pytest.mark.parametrize("variant", ["base", "hybrid", "lns"])
+def test_pipeline_variante_com_gurobi(inst, variant):
+    # --solver gurobi com qualquer variante: Gurobi onde se aplica, CP-SAT no resto (ou sem licença).
+    res = solve(inst, time_limit=10, verbose=False, variant=variant, solver="gurobi")
+    assert res.evaluation.feasible and res.evaluation.objective == 5.0
+    if variant == "lns":
+        assert res.solver == "cpsat"

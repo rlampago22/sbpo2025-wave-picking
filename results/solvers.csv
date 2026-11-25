@@ -1,0 +1,23 @@
+data,maquina,tag,tempo_limite,threads,instancia,solver,inicial,objetivo,referencia,otimo_provado,iteracoes,t_melhor,segundos,obs
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0001,cpsat,0.000000,15.000000,15.000000,True,4,0.1,0.1,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0001,gurobi,0.000000,15.000000,15.000000,True,4,0.0,0.1,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0003,cpsat,0.000000,12.000000,12.000000,True,4,0.2,0.2,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0003,gurobi,0.000000,12.000000,12.000000,True,4,0.1,0.1,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0004,cpsat,0.000000,3.500000,3.500000,True,5,0.0,0.0,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0004,gurobi,0.000000,3.500000,3.500000,True,5,0.0,0.0,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0009,cpsat,0.000000,4.416667,4.416667,True,5,0.3,0.4,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0009,gurobi,0.000000,4.416667,4.416667,True,5,0.2,0.3,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0012,cpsat,0.000000,11.250000,11.250000,True,5,2.4,2.5,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0012,gurobi,0.000000,11.250000,11.250000,True,5,0.7,0.7,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0017,cpsat,0.000000,36.500000,36.500000,True,5,3.9,3.9,
+2026-11-24T23:12:03,MacBook-Pro-de-Vinicius.local,licenca-restrita-sem-heuristica,60.0,8,a/instance_0017,gurobi,0.000000,36.500000,36.500000,True,5,2.7,2.7,
+2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,a/instance_0005,cpsat,141.913043,174.250000,177.875000,False,5,120.0,120.0,
+2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,a/instance_0005,gurobi,141.913043,,177.875000,,,,,sem licença p/ este tamanho
+2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,a/instance_0011,cpsat,12.405063,15.626866,16.850000,False,5,120.8,120.8,
+2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,a/instance_0011,gurobi,12.405063,,16.850000,,,,,sem licença p/ este tamanho
+2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,b/instance_0002,cpsat,129.521739,180.636364,180.636364,True,4,66.2,79.2,
+2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,b/instance_0002,gurobi,129.521739,,180.636364,,,,,sem licença p/ este tamanho
+2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,b/instance_0006,cpsat,71.673913,83.025641,84.027778,False,5,72.1,120.0,
+2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,b/instance_0006,gurobi,71.673913,,84.027778,,,,,sem licença p/ este tamanho
+2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,x/instance_0006,cpsat,170.133333,191.500000,191.857143,False,5,96.5,120.1,
+2026-11-24T23:21:39,MacBook-Pro-de-Vinicius.local,oficial-licenca-restrita,120.0,8,x/instance_0006,gurobi,170.133333,,191.857143,,,,,sem licença p/ este tamanho
