@@ -12,7 +12,7 @@ instância.txt
 2. Heurística gulosa        abre corredores um a um e enche a wave de pedidos  → solução inicial
    │
    ▼
-3. Melhoria local           tira corredores redundantes e encaixa mais pedidos
+3. Busca local + ILS        troca corredores e pedidos, perturba e guarda a melhor
    │
    ▼
 4. Dinkelbach + CP-SAT      método exato; parte da solução heurística
@@ -68,6 +68,24 @@ Detalhes da implementação ([`exact/dinkelbach.py`](../src/wavepick/exact/dinke
 - **Poda:** se `UB/k` já é menor que a melhor razão encontrada, abrir mais corredores não adianta.
 - **Diversificação:** repete a construção a partir de 10 corredores iniciais diferentes.
 
+## Busca local e ILS ([`heuristics/local_search.py`](../src/wavepick/heuristics/local_search.py))
+
+Parte da solução gulosa. Os movimentos só são aceitos se a solução melhorar:
+
+- **Completar a wave:** tira corredores redundantes e encaixa mais pedidos na sobra de estoque.
+- **Troca de corredor:** tira um, troca um por outro ou coloca um, e monta a wave de novo. Testa só
+  os candidatos mais promissores e aceita a primeira melhora.
+- **Troca de pedidos:** com os corredores fixos, tira um pedido pequeno e coloca outros que somem
+  mais unidades. Como o número de corredores não muda, mais unidades significa razão maior.
+
+A **ILS** (Iterated Local Search) repete: **perturba** a melhor solução (tira 2 ou 3 corredores ao
+acaso e coloca outros), aplica a busca local e guarda o resultado se for melhor. A perturbação é o
+que permite escapar de ótimos locais, em que nenhum movimento de um corredor por vez melhora.
+
+**Tempo:** com `--no-exact`, a ILS usa todo o tempo restante; no pipeline completo, 10% do total
+(`ILS_SHARE` em `pipeline.py`). O sorteio tem semente fixa, mas, como a parada é por tempo, o
+resultado pode variar entre máquinas.
+
 ## Mapa do código
 
 | Arquivo | Responsabilidade |
@@ -76,7 +94,7 @@ Detalhes da implementação ([`exact/dinkelbach.py`](../src/wavepick/exact/dinke
 | `src/wavepick/solution.py` | solução, verificação (igual ao checker oficial), leitura e escrita |
 | `src/wavepick/preprocess.py` | redução do problema |
 | `src/wavepick/heuristics/greedy.py` | construção gulosa |
-| `src/wavepick/heuristics/local_search.py` | melhoria local (**ponto de extensão principal**) |
+| `src/wavepick/heuristics/local_search.py` | busca local e ILS |
 | `src/wavepick/exact/dinkelbach.py` | modelo CP-SAT + Dinkelbach |
 | `src/wavepick/pipeline.py` | junta tudo para uma instância (CLI) |
 | `scripts/run_all.py` | roda várias instâncias; só salva se melhorar |
