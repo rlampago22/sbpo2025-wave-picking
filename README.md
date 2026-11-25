@@ -83,8 +83,9 @@ docs/                    documentação e plano
 
 - [x] Entendimento do problema e arquitetura
 - [x] Pipeline completo (heurística + Dinkelbach/CP-SAT + verificador)
-- [x] Primeira rodada em A, B e X: 50/50 válidas, **97,6%** da referência em média ([resultados](results/comparacao.md))
-- [ ] Busca local mais forte (Pessoa 2)
-- [ ] Variantes do modelo exato (Pessoa 1)
-- [x] Dinkelbach com Gurobi + opção `--solver cpsat|gurobi|auto` ([experimentos](docs/experimentos.md))
-- [ ] Apresentação (Pessoa 4)
+- [x] Primeira rodada em A, B e X: 50/50 válidas, 97,6% da referência em média
+- [x] Busca local e ILS (Gustavo)
+- [x] Variantes do modelo exato; híbrida LNS + modelo completo como padrão (Kelvin, [docs/04](docs/04-modelo-exato.md))
+- [x] Dinkelbach com Gurobi + opção `--solver cpsat|gurobi|auto`; Gurobi venceu 5/5 e virou o padrão (Vinicius, [experimentos](docs/experimentos.md))
+- [x] Rodadas longas com Gurobi: **50/50 válidas no checker oficial, 99,9% da referência em média** (A 99,95%, B 99,83%, X 99,91%; 33 instâncias iguais à referência, todas acima de 99,5%) ([resultados](results/comparacao.md))
+- [ ] Apresentação (Juliano + todos)
